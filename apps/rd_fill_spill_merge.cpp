@@ -4,12 +4,7 @@
 #include <richdem/misc/misc_methods.hpp>
 #include <richdem/ui/cli_options.hpp>
 
-#ifdef RICHDEM_USE_BOOST_SERIALIZATION
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
 #include <filesystem>
-#endif
-
 #include <iostream>
 #include <stdexcept>
 #include <string>

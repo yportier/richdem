@@ -5,6 +5,7 @@
 #include <richdem/common/loaders.hpp>
 #include <richdem/misc/misc_methods.hpp>
 #include <richdem/richdem.hpp>
+#include <richdem/terrain_generation.hpp>
 
 #include <filesystem>
 #include <queue>
@@ -458,3 +459,37 @@ TEST_CASE("DirectionsMatchExpectations"){
     CHECK(get_nmax_for_topology<Topology::D4>() == 4);
   }
 }
+
+#ifdef RICHDEM_USE_BOOST_SERIALIZATION
+TEST_CASE("Array2D serialization works"){
+  auto original = generate_perlin_terrain(30, 123456);
+  original.filename = "random_test_terrain";
+  original.basename = "random_basename";
+  original.geotransform = {1,2,3,4,5,6};
+  original.projection = "random_projection";
+  original.metadata = {{"entry", "value"}};
+
+  const auto tmpdir = fs::temp_directory_path();
+  const auto tmpfile = tmpdir / "serialized_array2d";
+
+  {
+    std::ofstream ofs(tmpfile);
+    boost::archive::binary_oarchive oa(ofs);
+    oa << original;
+  }
+
+  Array2D<double> recovered;
+  {
+    std::ifstream ifs(tmpfile);
+    boost::archive::binary_iarchive ia(ifs);
+    ia >> recovered;
+  }
+
+  CHECK(original == recovered);
+  CHECK(original.filename == recovered.filename);
+  CHECK(original.basename == recovered.basename);
+  CHECK(original.geotransform == recovered.geotransform);
+  CHECK(original.projection == recovered.projection);
+  CHECK(original.metadata == recovered.metadata);
+}
+#endif
