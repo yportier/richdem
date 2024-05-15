@@ -461,7 +461,7 @@ TEST_CASE("DirectionsMatchExpectations"){
 }
 
 #ifdef RICHDEM_USE_BOOST_SERIALIZATION
-TEST_CASE("Array2D serialization works"){
+TEST_CASE("Array2D serialization"){
   auto original = generate_perlin_terrain(30, 123456);
   original.filename = "random_test_terrain";
   original.basename = "random_basename";
