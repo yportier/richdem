@@ -433,8 +433,7 @@ GetDepressionHierarchy(const Array2D<elev_t>& dem, Array2D<dh_label_t>& label, A
     const auto celev = pq.top_key();    // Elevation of focal cell
     pq.pop();                           // Remove the copied cell from the priority queue
     auto clabel = label(ci);            // Nominal label of cell
-    int cx, cy;
-    dem.iToxy(ci, cx, cy);
+    const auto [cx, cy] = dem.iToxy(ci);
 
     if (clabel == OCEAN) {
       // This cell is an ocean cell or a cell that flows into the ocean without

@@ -283,8 +283,7 @@ static void MoveWaterIntoPits(
     const auto ndir = flowdirs(c); //Neighbour direction
     int n = NO_FLOW;               //Neighbour address
     if(ndir!=NO_FLOW){
-      int x,y;
-      topo.iToxy(c,x,y);
+      const auto [x, y] = topo.iToxy(c);
       const int nx = x+d8x[ndir];
       const int ny = y+d8y[ndir];
       n            = topo.xyToI(nx,ny);
@@ -932,8 +931,7 @@ void FillDepressions(
     //NOTE: if our logic is wrong somewhere adding the cell like this could
     //result in an infinite loop.
     if(flood_q.empty()){
-      int x,y;
-      topo.iToxy(out_cell, x, y);
+      const auto [x, y] = topo.iToxy(out_cell);
       flood_q.emplace(x, y, topo(out_cell));
       visited.emplace(out_cell);
     }

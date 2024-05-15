@@ -282,8 +282,7 @@ void BucketFill(
 
     set_raster(c) = set_value;
 
-    int cx,cy;
-    check_raster.iToxy(c,cx,cy);
+    const auto [cx, cy] = check_raster.iToxy(c);
 
     for(int n=1;n<=nmax;n++){
       if(!check_raster.inGrid(cx+dx[n],cy+dy[n]))

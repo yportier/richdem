@@ -65,15 +65,17 @@ TEST_CASE( "Array2D works" ) {
       14 15 16 17 18 19 20
     */
 
-    int x,y;
+    {
+      const auto [x, y] = arr.iToxy(0);
+      REQUIRE( x==0 );
+      REQUIRE( y==0 );
+    }
 
-    arr.iToxy(0,x,y);
-    REQUIRE( x==0 );
-    REQUIRE( y==0 );
-
-    arr.iToxy(arr.size()-1,x,y);
-    REQUIRE( x==arr.width()-1  );
-    REQUIRE( y==arr.height()-1 );
+    {
+      const auto [x,y] = arr.iToxy(arr.size()-1);
+      REQUIRE( x==arr.width()-1  );
+      REQUIRE( y==arr.height()-1 );
+    }
 
     REQUIRE( arr.xyToI(2,1)==9  );
     REQUIRE( arr.xyToI(6,2)==20 );

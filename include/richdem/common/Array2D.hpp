@@ -576,9 +576,8 @@ class Array2D {
     @param[out] x   X-coordinate of i
     @param[out] y   Y-coordinate of i
   */
-  void iToxy(const i_t i, xy_t &x, xy_t &y) const {
-    x = i%view_width;
-    y = i/view_width;
+  std::pair<xy_t, xy_t> iToxy(const i_t i) const {
+    return {i%view_width, i/view_width};
   }
 
   /**
@@ -817,8 +816,7 @@ class Array2D {
     @return TRUE if cell lies on the raster's boundary
   */
   bool isEdgeCell(i_t i) const {
-    xy_t x,y;
-    iToxy(i,x,y);
+    const auto [x, y] = iToxy(i);
     return isEdgeCell(x,y);
   }
 
