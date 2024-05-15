@@ -91,13 +91,14 @@ int main(int argc, char** argv) {
   dh::DepressionHierarchy<double> deps;
   if (!save_dh_filename.empty()) {
     if (std::filesystem::exists(save_dh_filename)) {
+      // Save DH
       std::ifstream ifs(save_dh_filename);
       boost::archive::binary_iarchive ia(ifs);
       ia >> deps >> flowdirs;
       std::cout << "m Loading DH from " << save_dh_filename << std::endl;
     } else {
+      // Load DH
       deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
-      // make an archive
       std::ofstream ofs(save_dh_filename);
       boost::archive::binary_oarchive oa(ofs);
       oa << deps << flowdirs;
