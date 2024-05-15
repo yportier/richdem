@@ -42,10 +42,11 @@ void FM_OCallaghan(
     if(elevations.isEdgeCell(x,y))
       continue;
 
-    const elev_t   e  = elevations(x,y);
+    const auto ci = elevations.xyToI(x, y);
+    const auto ce = elevations(ci);
 
-    int lowest_n      = 0;
-    elev_t   lowest_n_elev = std::numeric_limits<elev_t>::max();
+    int lowest_n = 0;
+    auto lowest_n_elev = std::numeric_limits<elev_t>::max();
     for(int n=1;n<=nmax;n++){
       const int nx = x + dx[n];
       const int ny = y + dy[n];
@@ -55,7 +56,7 @@ void FM_OCallaghan(
 
       const elev_t ne = elevations(nx, ny);
 
-      if(ne>=e)
+      if(ne>=ce)
         continue;
 
       if(ne<lowest_n_elev){
@@ -69,7 +70,7 @@ void FM_OCallaghan(
 
     props(x,y,0) = HAS_FLOW_GEN;
 
-    assert(elevations(ci)>=elevations(ci+elevations.nshift(lowest_n))); //Ensure flow goes downhill
+    assert(ce>=elevations(ci+elevations.nshift(lowest_n))); //Ensure flow goes downhill
 
     props(x,y,lowest_n) = 1;
   }
