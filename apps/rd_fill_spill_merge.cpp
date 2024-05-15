@@ -7,9 +7,9 @@
 #ifdef RICHDEM_USE_BOOST_SERIALIZATION
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
+#include <filesystem>
 #endif
 
-#include <filesystem>
 #include <iostream>
 #include <stdexcept>
 #include <string>
