@@ -109,3 +109,19 @@ install(
   RUNTIME DESTINATION "bin"
 )
 install(DIRECTORY include/richdem DESTINATION include)
+
+
+file(GLOB_RECURSE FILES_TO_FORMAT
+  "${CMAKE_SOURCE_DIR}/*.cpp"
+  "${CMAKE_SOURCE_DIR}/*.cu"
+  "${CMAKE_SOURCE_DIR}/*.h"
+  "${CMAKE_SOURCE_DIR}/*.hpp"
+)
+
+list(FILTER FILES_TO_FORMAT EXCLUDE REGEX "${CMAKE_BINARY_DIR}/.*")
+list(FILTER FILES_TO_FORMAT EXCLUDE REGEX "${CMAKE_SOURCE_DIR}/include/catch/.*")
+list(FILTER FILES_TO_FORMAT EXCLUDE REGEX "${CMAKE_SOURCE_DIR}/include/cereal/.*")
+add_custom_target(
+    format
+    COMMAND clang-format -i ${FILES_TO_FORMAT}
+)
