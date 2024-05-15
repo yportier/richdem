@@ -101,21 +101,21 @@ int main(int argc, char** argv) {
   // connecting them
   std::cout << "p Getting depression hierarchy..." << std::endl;
 
-#ifdef RICHDEM_USE_BOOST_SERIALIZATION
-  dh::DepressionHierarchy deps;
-  if (save_dh_filename.empty()) {
-    deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
-    if (!save_dh_filename.empty()) {
-      // make an archive
-      std::ofstream ofs(save_dh_filename);
-      boost::archive::binary_oarchive oa(ofs);
-      oa << deps;
+  #ifdef RICHDEM_USE_BOOST_SERIALIZATION
+    dh::DepressionHierarchy<double> deps;
+    if(save_dh_filename.empty()) {
+      deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
+      if(!save_dh_filename.empty()) {
+        // make an archive
+        std::ofstream ofs(save_dh_filename);
+        boost::archive::binary_oarchive oa(ofs);
+        oa << deps << flowdirs;
+      }
+    } else {
+      std::ifstream ifs(save_dh_filename);
+      boost::archive::binary_iarchive ia(ifs);
+      ia >> deps >> flowdirs;
     }
-  } else {
-    std::ifstream ifs(save_dh_filename);
-    boost::archive::binary_iarchive ia(ifs);
-    ia >> deps;
-  }
 #else
   auto deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
 #endif

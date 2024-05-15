@@ -69,6 +69,7 @@ endif()
 
 if(Boost_SERIALIZATION_FOUND)
   target_compile_definitions(richdem PUBLIC -DRICHDEM_USE_BOOST_SERIALIZATION)
+  target_link_libraries(richdem PUBLIC Boost::serialization)
 endif()
 
 target_compile_options(richdem
