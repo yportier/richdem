@@ -900,3 +900,23 @@ def fill_spill_merge(dem: rdarray, labels: rdarray, flowdirs: rdarray, deps: Lis
     wtdw = wtd.wrap()
 
     dhret = depression_hierarchy.fill_spill_merge(demw, labelsw, flowdirsw, deps, wtdw)
+
+
+__all__ = (
+    "GDAL_AVAILABLE",
+    "STANDARD_GEOTRANSFORM",
+    "rdShow",
+    "LoadGDAL",
+    "SaveGDAL",
+    "FillDepressions",
+    "BreachDepressions",
+    "ResolveFlats",
+    "FlowAccumulation",
+    "FlowAccumFromProps",
+    "FlowProportions",
+    "TerrainAttribute",
+    "generate_perlin_terrain",
+    "get_depression_hierarchy",
+    "get_new_depression_hierarchy_labels",
+    "fill_spill_merge"
+)
