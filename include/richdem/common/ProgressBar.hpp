@@ -18,21 +18,18 @@
 #ifndef _richdem_progress_bar_hpp_
 #define _richdem_progress_bar_hpp_
 
-#include <string>
-#include <iostream>
-#include <iomanip>
-#include <stdexcept>
 #include <richdem/common/timer.hpp>
 
-namespace richdem {
+#include <iomanip>
+#include <iostream>
+#include <stdexcept>
+#include <string>
 
-///Macros used to disguise the fact that we do not have multithreading enabled.
 #ifdef _OPENMP
   #include <omp.h>
-#else
-  #define omp_get_thread_num()  0
-  #define omp_get_num_threads() 1
 #endif
+
+namespace richdem {
 
 ///@brief Manages a console-based progress bar to keep the user entertained.
 ///
@@ -41,7 +38,7 @@ namespace richdem {
 ///of the progress bar is shown in ProgressBar.hpp.
 class ProgressBar{
   private:
-    uint32_t total_work;    ///< Total work to be accomplished
+    uint32_t total_work_;    ///< Total work to be accomplished
     uint32_t next_update;   ///< Next point to update the visible progress bar
     uint32_t call_diff;     ///< Interval between updates in work units
     uint32_t work_done;
@@ -53,15 +50,31 @@ class ProgressBar{
       std::cerr<<"\r\033[2K"<<std::flush;
     }
 
+    int num_threads() const {
+      #ifdef _OPENMP
+        return omp_get_num_threads();
+      #else
+        return 1;
+      #endif
+    }
+
+    int thread_num() const {
+      #ifdef _OPENMP
+        return omp_get_thread_num();
+      #else
+        return 1;
+      #endif      
+    }
+
   public:
     ///@brief Start/reset the progress bar.
     ///@param total_work  The amount of work to be completed, usually specified in cells.
     void start(uint32_t total_work){
       timer = Timer();
       timer.start();
-      this->total_work = total_work;
+      total_work_ = total_work;
       next_update      = 0;
-      call_diff        = total_work/200;
+      call_diff        = total_work_/200;
       old_percent      = 0;
       work_done        = 0;
       clearConsoleLine();
@@ -76,7 +89,7 @@ class ProgressBar{
         return;
       #endif
 
-      if(omp_get_thread_num()!=0)
+      if(thread_num()!=0)
         return;
 
       work_done = work_done0;
@@ -86,7 +99,7 @@ class ProgressBar{
 
       next_update += call_diff;
 
-      uint16_t percent = (uint8_t)(work_done*omp_get_num_threads()*100/total_work);
+      uint16_t percent = (uint8_t)(work_done*num_threads()*100/total_work_);
       if(percent>100)
         percent=100;
       if(percent==old_percent)
@@ -99,12 +112,12 @@ class ProgressBar{
                <<percent<<"% - "
                <<std::fixed<<std::setprecision(1)<<timer.lap()/percent*(100-percent)
                <<"s - "
-               <<omp_get_num_threads()<< " threads)"<<std::flush;
+               <<num_threads()<< " threads)"<<std::flush;
     }
 
     ///Increment by one the work done and update the progress bar
     ProgressBar& operator++(){
-      if(omp_get_thread_num()!=0)
+      if(thread_num()!=0)
         return *this;
       work_done++;
       update(work_done);

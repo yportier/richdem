@@ -1,191 +1,48 @@
-#include <pybind11/pybind11.h>
-#include <richdem/depressions/depressions.hpp>
-#include <richdem/methods/terrain_attributes.hpp>
-#include <richdem/methods/flow_accumulation.hpp>
-#include <richdem/flats/flats.hpp>
+#include "pywrapper.hpp"
+
+#include <richdem/depressions/depression_hierarchy.hpp>
+#include <richdem/depressions/fill_spill_merge.hpp>
+
 #include <pybind11/numpy.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/stl_bind.h>
 #include <pybind11/stl.h>
-// #include "pybind11_array2d.hpp"
+
 #include <string>
 
 namespace py = pybind11;
 
 using namespace richdem;
 
-//Tutorials
-//http://www.benjack.io/2017/06/12/python-cpp-tests.html
-//https://pybind11.readthedocs.io/en/stable/classes.html
-//http://people.duke.edu/~ccc14/sta-663-2016/18G_C++_Python_pybind11.html
-
-//Passing data around
-//https://github.com/pybind/pybind11/issues/27
-
-//Note:
-//py::array_t<double, py::array::c_style | py::array::forcecast>
-//forcecast forces a conversion. We don't use it here in order to ensure that memory is not unnecessarily copied
-
-// #include "pybind11_array2d.hpp"
-
-
-template<class T>
-void TemplatedWrapper(py::module &m, std::string tname){
-  m.def("rdFillDepressionsD8",   &PriorityFlood_Zhou2016<T>,                "@@depressions/Zhou2016pf.hpp:Zhou2016@@"); //TODO
-  m.def("rdFillDepressionsD4",   &PriorityFlood_Barnes2014<Topology::D4,T>, "@@depressions/Zhou2016pf.hpp:Zhou2016@@"); //TODO
-  m.def("rdPFepsilonD8",         &PriorityFloodEpsilon_Barnes2014<Topology::D8,T>, "Fill all depressions with epsilon."); //TODO
-  m.def("rdPFepsilonD4",         &PriorityFloodEpsilon_Barnes2014<Topology::D4,T>, "Fill all depressions with epsilon."); //TODO
-
-  m.def("rdResolveFlatsEpsilon", &ResolveFlatsEpsilon<T>,         "TODO");
-
-  m.def("rdBreachDepressionsD8",   &BreachDepressions<Topology::D8,T>,               "@@depressions/Lindsay2016.hpp:Lindsay2016@@"); //TODO  
-  m.def("rdBreachDepressionsD4",   &BreachDepressions<Topology::D4,T>,               "@@depressions/Lindsay2016.hpp:Lindsay2016@@"); //TODO  
-
-  //m.def("rdBreach",              [](Array2D<T> &dem, const int mode, bool fill_depressions){&Lindsay2016<T>(dem,mode,fill_depressions);}, "TODO");
-
-  m.def("TA_SPI",                &TA_SPI<T, float, double>,       "TODO");         
-  m.def("TA_CTI",                &TA_CTI<T, float, double>,       "TODO");         
-  m.def("TA_slope_riserun",      &TA_slope_riserun     <T>,       "TODO");                   
-  m.def("TA_slope_percentage",   &TA_slope_percentage  <T>,       "TODO");                      
-  m.def("TA_slope_degrees",      &TA_slope_degrees     <T>,       "TODO");                   
-  m.def("TA_slope_radians",      &TA_slope_radians     <T>,       "TODO");                   
-  m.def("TA_aspect",             &TA_aspect            <T>,       "TODO");            
-  m.def("TA_curvature",          &TA_curvature         <T>,       "TODO");               
-  m.def("TA_planform_curvature", &TA_planform_curvature<T>,       "TODO");                        
-  m.def("TA_profile_curvature",  &TA_profile_curvature <T>,       "TODO");                       
-
-  m.def("FA_Tarboton",            &FA_Tarboton           <T,double>, "TODO");
-  m.def("FA_Dinfinity",           &FA_Dinfinity          <T,double>, "TODO");
-  m.def("FA_Holmgren",            &FA_Holmgren           <T,double>, "TODO");
-  m.def("FA_Quinn",               &FA_Quinn              <T,double>, "TODO");
-  m.def("FA_Freeman",             &FA_Freeman            <T,double>, "TODO");
-  m.def("FA_FairfieldLeymarieD8", &FA_FairfieldLeymarieD8<T,double>, "TODO");
-  m.def("FA_FairfieldLeymarieD4", &FA_FairfieldLeymarieD4<T,double>, "TODO");
-  m.def("FA_Rho8",                &FA_Rho8               <T,double>, "TODO");
-  m.def("FA_Rho4",                &FA_Rho4               <T,double>, "TODO");
-  m.def("FA_D8",                  &FA_D8                 <T,double>, "TODO");
-  m.def("FA_D4",                  &FA_D4                 <T,double>, "TODO");
-  m.def("FA_OCallaghanD8",        &FA_OCallaghanD8       <T,double>, "TODO");
-  m.def("FA_OCallaghanD4",        &FA_OCallaghanD4       <T,double>, "TODO");
-
-  m.def("FM_Tarboton",            &FM_Tarboton          <T>,              "TODO");
-  m.def("FM_Dinfinity",           &FM_Dinfinity         <T>,              "TODO");
-  m.def("FM_Holmgren",            &FM_Holmgren          <T>,              "TODO");
-  m.def("FM_Quinn",               &FM_Quinn             <T>,              "TODO");
-  m.def("FM_Freeman",             &FM_Freeman           <T>,              "TODO");
-  m.def("FM_FairfieldLeymarieD8", &FM_FairfieldLeymarie <Topology::D8,T>, "TODO");
-  m.def("FM_FairfieldLeymarieD4", &FM_FairfieldLeymarie <Topology::D4,T>, "TODO");
-  m.def("FM_Rho8",                &FM_Rho8              <T>,              "TODO");
-  m.def("FM_Rho4",                &FM_Rho4              <T>,              "TODO");
-  m.def("FM_OCallaghanD8",        &FM_OCallaghan        <Topology::D8,T>, "TODO");
-  m.def("FM_OCallaghanD4",        &FM_OCallaghan        <Topology::D4,T>, "TODO");
-  m.def("FM_D8",                  &FM_D8                <T>,              "TODO");
-  m.def("FM_D4",                  &FM_D4                <T>,              "TODO");
-
-  py::class_<Array2D<T>>(m, ("Array2D_" + tname).c_str(), py::buffer_protocol(), py::dynamic_attr())
-      .def(py::init<>())
-      .def(py::init<typename Array2D<T>::xy_t, typename Array2D<T>::xy_t,T>())
-      
-      // .def(py::init<const Array2D<float   >&, T>())
-      // .def(py::init<const Array2D<double  >&, T>())
-      // .def(py::init<const Array2D<int8_t  >&, T>())
-      // .def(py::init<const Array2D<int16_t >&, T>())
-      // .def(py::init<const Array2D<int32_t >&, T>())
-      // .def(py::init<const Array2D<int64_t >&, T>())
-      // .def(py::init<const Array2D<uint8_t >&, T>())
-      // .def(py::init<const Array2D<uint16_t>&, T>())
-      // .def(py::init<const Array2D<uint32_t>&, T>())
-      // .def(py::init<const Array2D<uint64_t>&, T>())
-
-      //NOTE: This does not do reference counting. For that we would want
-      //py::object and a wrapped derived class of Array2D
-      .def(py::init([](py::handle src){
-        // if(!py::array_t<T>::check_(src)) //TODO: What's this about?
-          // return false;
-
-        auto buf = py::array_t<T, py::array::c_style | py::array::forcecast>::ensure(src);
-        if (!buf)
-          throw std::runtime_error("Unable to convert array to RichDEM object!");
-
-        //TODO: CHeck stride
-        auto dims = buf.ndim();
-        if (dims != 2 )
-          throw std::runtime_error("Array must have two dimensions!");
-
-        return new Array2D<T>((T*)buf.data(), buf.shape()[1], buf.shape()[0]);
-      }))
-
-      .def("size",      &Array2D<T>::size)
-      .def("width",     &Array2D<T>::width)
-      .def("height",    &Array2D<T>::height)
-      .def("empty",     &Array2D<T>::empty)
-      .def("noData",    &Array2D<T>::noData)
-      .def("min",       &Array2D<T>::min)
-      .def("max",       &Array2D<T>::max)
-      
-      //TODO: Simplify by casting to double in Python
-      .def("setNoData", [](Array2D<T> &a, const float    ndval){ a.setNoData((T)ndval); })
-      .def("setNoData", [](Array2D<T> &a, const double   ndval){ a.setNoData((T)ndval); })
-      .def("setNoData", [](Array2D<T> &a, const int8_t   ndval){ a.setNoData((T)ndval); })
-      .def("setNoData", [](Array2D<T> &a, const int16_t  ndval){ a.setNoData((T)ndval); })
-      .def("setNoData", [](Array2D<T> &a, const int32_t  ndval){ a.setNoData((T)ndval); })
-      .def("setNoData", [](Array2D<T> &a, const int64_t  ndval){ a.setNoData((T)ndval); })
-      .def("setNoData", [](Array2D<T> &a, const uint8_t  ndval){ a.setNoData((T)ndval); })
-      .def("setNoData", [](Array2D<T> &a, const uint16_t ndval){ a.setNoData((T)ndval); })
-      .def("setNoData", [](Array2D<T> &a, const uint32_t ndval){ a.setNoData((T)ndval); })
-      .def("setNoData", [](Array2D<T> &a, const uint64_t ndval){ a.setNoData((T)ndval); })
-            
-      .def_readwrite("geotransform", &Array2D<T>::geotransform)
-      .def_readwrite("projection",   &Array2D<T>::projection)
-      .def_readwrite("metadata",     &Array2D<T>::metadata)
-      .def("copy", [](const Array2D<T> a){
-        return a;
-      })
-
-      // .def_buffer([](Array2D<T> &arr) -> py::buffer_info {
-      //   return py::buffer_info(
-      //     arr.getData(),
-      //     sizeof(T),
-      //     py::format_descriptor<T>::format(),
-      //     2,                                           //Dimensions
-      //     {arr.height(), arr.width()},                 //Shape
-      //     {sizeof(T) * arr.width(), sizeof(T)} //Stride (in bytes)
-      //   );
-      // })
-      .def("__repr__",
-        [=](const Array2D<T> &a) {
-            return "<RichDEM array: type="+tname+", width="+std::to_string(a.width())+", height="+std::to_string(a.height())+", owned="+std::to_string(a.owned())+">";
-        }
-      )
-      .def("__call__",
-        [](Array2D<T> &a, const int x, const int y) -> T& {
-          return a(x,y);
-        }
-      )
-      .def("__call__",
-        [](Array2D<T> &a, const int i) -> T& {
-          return a(i);
-        }
-      );
-}
-
-
-
 PYBIND11_MODULE(_richdem, m) {
   m.doc() = "Internal library used by pyRichDEM for calculations";
+
+  m.attr("NO_FLOW") = &richdem::NO_FLOW;
 
   //py::bind_vector<std::vector<double>>(m, "VecDouble");
   py::bind_map<std::map<std::string, std::string>>(m, "MapStringString");
 
-  TemplatedWrapper<float   >(m, "float"   );
-  TemplatedWrapper<double  >(m, "double"  );
-  TemplatedWrapper<int8_t  >(m, "int8_t"  );
-  TemplatedWrapper<int16_t >(m, "int16_t" );
-  TemplatedWrapper<int32_t >(m, "int32_t" );
-  TemplatedWrapper<int64_t >(m, "int64_t" );
-  TemplatedWrapper<uint8_t >(m, "uint8_t" );
-  TemplatedWrapper<uint16_t>(m, "uint16_t");
-  TemplatedWrapper<uint32_t>(m, "uint32_t");
-  TemplatedWrapper<uint64_t>(m, "uint64_t");
+  TemplatedFunctionsWrapper<float   >(m, "float"   );
+  TemplatedFunctionsWrapper<double  >(m, "double"  );
+  TemplatedFunctionsWrapper<int8_t  >(m, "int8_t"  );
+  TemplatedFunctionsWrapper<int16_t >(m, "int16_t" );
+  TemplatedFunctionsWrapper<int32_t >(m, "int32_t" );
+  TemplatedFunctionsWrapper<int64_t >(m, "int64_t" );
+  TemplatedFunctionsWrapper<uint8_t >(m, "uint8_t" );
+  TemplatedFunctionsWrapper<uint16_t>(m, "uint16_t");
+  TemplatedFunctionsWrapper<uint32_t>(m, "uint32_t");
+  TemplatedFunctionsWrapper<uint64_t>(m, "uint64_t");
+
+  TemplatedArrayWrapper<float   >(m, "float"   );
+  TemplatedArrayWrapper<double  >(m, "double"  );
+  TemplatedArrayWrapper<int8_t  >(m, "int8_t"  );
+  TemplatedArrayWrapper<int16_t >(m, "int16_t" );
+  TemplatedArrayWrapper<int32_t >(m, "int32_t" );
+  TemplatedArrayWrapper<int64_t >(m, "int64_t" );
+  TemplatedArrayWrapper<uint8_t >(m, "uint8_t" );
+  TemplatedArrayWrapper<uint16_t>(m, "uint16_t");
+  TemplatedArrayWrapper<uint32_t>(m, "uint32_t");
+  TemplatedArrayWrapper<uint64_t>(m, "uint64_t");
 
   m.def("rdHash",        &rdHash,        "Git hash of previous commit");
   m.def("rdCompileTime", &rdCompileTime, "Commit time of previous commit");
@@ -195,7 +52,7 @@ PYBIND11_MODULE(_richdem, m) {
   py::class_<Array3D<float>>(m, "Array3D_float", py::buffer_protocol(), py::dynamic_attr())
       .def(py::init<>())
       .def(py::init<typename Array3D<float>::xy_t, typename Array3D<float>::xy_t,float>())
-      
+
       // .def(py::init<const Array2D<float   >&, T>())
       // .def(py::init<const Array2D<double  >&, T>())
       // .def(py::init<const Array2D<int8_t  >&, T>())
@@ -231,7 +88,7 @@ PYBIND11_MODULE(_richdem, m) {
       .def("height",    &Array3D<float>::height)
       .def("empty",     &Array3D<float>::empty)
       .def("noData",    &Array3D<float>::noData)
-      
+
       //TODO: Simplify by casting to double in Python
       .def("setNoData", [](Array3D<float> &a, const float    ndval){ a.setNoData((float)ndval); })
       .def("setNoData", [](Array3D<float> &a, const double   ndval){ a.setNoData((float)ndval); })
@@ -243,7 +100,7 @@ PYBIND11_MODULE(_richdem, m) {
       .def("setNoData", [](Array3D<float> &a, const uint16_t ndval){ a.setNoData((float)ndval); })
       .def("setNoData", [](Array3D<float> &a, const uint32_t ndval){ a.setNoData((float)ndval); })
       .def("setNoData", [](Array3D<float> &a, const uint64_t ndval){ a.setNoData((float)ndval); })
-            
+
       .def_readwrite("geotransform", &Array3D<float>::geotransform)
       .def_readwrite("projection",   &Array3D<float>::projection)
       .def_readwrite("metadata",     &Array3D<float>::metadata)
@@ -277,4 +134,45 @@ PYBIND11_MODULE(_richdem, m) {
         }
       );
 
+  m.def("generate_perlin_terrain", &richdem::generate_perlin_terrain, "Generate random terrain using perlin noise", py::arg("array"), py::arg("seed"));
+
+  py::module_ dephier_module = m.def_submodule("depression_hierarchy", "Depression Hierarchies");
+
+  dephier_module.attr("NO_PARENT") = &dephier::NO_PARENT;
+  dephier_module.attr("NO_VALUE") = &dephier::NO_VALUE;
+  dephier_module.attr("NO_DEP") = &dephier::NO_DEP;
+  dephier_module.attr("OCEAN") = &dephier::OCEAN;
+
+  // Depression Hierarchy
+  py::class_<dephier::Depression<double>>(dephier_module, "Depression")
+    .def(py::init<>())
+    .def_readwrite("pit_cell",        &dephier::Depression<double>::pit_cell, "Flat index of the pit cell, the lowest cell in the depression. If more than one cell shares this lowest elevation, then one is arbitrarily chosen.")
+    .def_readwrite("out_cell",        &dephier::Depression<double>::out_cell, "Flat index of the outlet cell. If there is more than one outlet cell at this cell's elevation, then one is arbitrarily chosen.")
+    .def_readwrite("parent",          &dephier::Depression<double>::parent, "Parent depression. If both this depression and its neighbour fill up, this parent depression is the one which will contain the overflow.")
+    .def_readwrite("odep",            &dephier::Depression<double>::odep, "Outlet depression. The metadepression into which this one overflows. Usually its neighbour depression, but sometimes the ocean.")
+    .def_readwrite("geolink",         &dephier::Depression<double>::geolink, "When a metadepression overflows it does so into the metadepression indicated by `odep`. However, odep must flood from the bottom up. Therefore, we keep track of the `geolink`, which indicates what leaf depression the overflow is initially routed into.")
+    .def_readwrite("pit_elev",        &dephier::Depression<double>::pit_elev, "Elevation of the pit cell. Since the pit cell has the lowest elevation of any cell in the depression, we initialize this to infinity.")
+    .def_readwrite("out_elev",        &dephier::Depression<double>::out_elev, "Elevation of the outlet cell. Since the outlet cell has the lowest elevation of any path leading from a depression, we initialize this to infinity.")
+    .def_readwrite("lchild",          &dephier::Depression<double>::lchild, "The depressions form a binary tree. Each depression has two child depressions: one left and one right.")
+    .def_readwrite("rchild",          &dephier::Depression<double>::rchild, "The depressions form a binary tree. Each depression has two child depressions: one left and one right.")
+    .def_readwrite("ocean_parent",    &dephier::Depression<double>::ocean_parent, "Indicates whether the parent link is to either the ocean or a depression that links to the ocean.")
+    .def_readwrite("ocean_linked",    &dephier::Depression<double>::ocean_linked, "Indicates depressions which link to the ocean through this depression, but are not subdepressions. That is, these ocean-linked depressions may be at the top of high cliffs and spilling into this depression.")
+    .def_readwrite("dep_label",       &dephier::Depression<double>::dep_label, "The label of the depression, for calling it up again.")
+    .def_readwrite("cell_count",      &dephier::Depression<double>::cell_count, "Number of cells contained within the depression and its children.")
+    .def_readwrite("dep_vol",         &dephier::Depression<double>::dep_vol, "Volume of the depression and its children. Used in the Water Level Equation (see below).")
+    .def_readwrite("water_vol",       &dephier::Depression<double>::water_vol, "Water currently contained within the depression. Used in the Water Level Equation (see below).")
+    .def_readwrite("total_elevation", &dephier::Depression<double>::total_elevation, "Total elevation of cells contained with the depression and its children.")
+  ; //Ends the class definition above
+
+  dephier_module.def("get_depression_hierarchy", &dephier::GetDepressionHierarchy<double, Topology::D8>, "Calculate the hierarchy of depressions. Takes as input a digital elevation model and a set of labels. The labels should have `OCEAN` for cells");
+  dephier_module.def(
+    "fill_spill_merge",
+    &dephier::FillSpillMerge<double, double>,
+    "Perform Fill-Spill-Merge on a given landscape and its associated depression hierarchy and water table depths",
+    py::arg("topo"),
+    py::arg("labels"),
+    py::arg("flowdirs"),
+    py::arg("deps"),
+    py::arg("wtd")
+  );
 }

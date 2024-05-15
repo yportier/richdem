@@ -1,45 +1,56 @@
 #include <richdem/common/logger.hpp>
 
 #include <map>
-#include <string>
+#include <string_view>
 
 namespace richdem {
 
-//TODO: Could use vector for this since the enum just compiles to an int. But
-//need to make sure things are in the right order.
-std::map<LogFlag, std::string> log_flag_chars_begin = {
-  {ALG_NAME, "\nA"},
-  {CITATION, "C"},
-  {CONFIG,   "c"},
-  {DEBUG,    "\033[95md"},
-  {ERROR,    "E"},
-  {MEM_USE,  " "},
-  {MISC,     "m"},
-  {PROGRESS, "p"},
-  {TIME_USE, "t"},
-  {WARN,     "\033[91mW"}
-};
+// TODO(r-barnes): Could use vector for this since the enum just compiles to an
+// int. But need to make sure things are in the right order.
+std::string_view log_flag_chars_begin(LogFlag flag){
+  switch(flag){
+    case LogFlag::ALG_NAME:  return "\nA";
+    case LogFlag::CITATION:  return "C";
+    case LogFlag::CONFIG:    return "c";
+    case LogFlag::DEBUG:     return "\033[95md";
+    case LogFlag::ERROR_:    return "E";
+    case LogFlag::MEM_USE:   return " ";
+    case LogFlag::MISC:      return "m";
+    case LogFlag::PROGRESS:  return "p";
+    case LogFlag::TIME_USE:  return "t";
+    case LogFlag::WARN:      return "\033[91mW";
+    default:
+      throw std::runtime_error("Unrecognized logging flag!");
+  }
+}
 
-std::map<LogFlag, std::string> log_flag_chars_end = {
-  {ALG_NAME, ""},
-  {CITATION, "\n"},
-  {CONFIG,   ""},
-  {DEBUG,    ""},
-  {ERROR,    ""},
-  {MEM_USE,  ""},
-  {MISC,     ""},
-  {PROGRESS, ""},
-  {TIME_USE, ""},
-  {WARN,     ""}
-};
+std::string_view log_flag_chars_end(LogFlag flag){
+  switch(flag){
+    case LogFlag::ALG_NAME:  return "";
+    case LogFlag::CITATION:  return "\n";
+    case LogFlag::CONFIG:    return "";
+    case LogFlag::DEBUG:     return "";
+    case LogFlag::ERROR_:    return "";
+    case LogFlag::MEM_USE:   return "";
+    case LogFlag::MISC:      return "";
+    case LogFlag::PROGRESS:  return "";
+    case LogFlag::TIME_USE:  return "";
+    case LogFlag::WARN:      return "";
+    default:
+      throw std::runtime_error("Unrecognized logging flag!");
+  }
+}
 
-void RDLOGfunc(LogFlag flag, const char* file, const char* func, unsigned line, std::string msg) {
-  std::cerr<<log_flag_chars_begin.at(flag)<<" "<<msg
+void RDLOGfunc(const LogFlag flag, const char* file, const char* func, unsigned line, const std::string &msg) {
+  (void)file; // Suppress unused variable warning
+  (void)func; // Suppress unused variable warning
+  (void)line; // Suppress unused variable warning
+  std::cerr<<log_flag_chars_begin(flag)<<" "<<msg
   #ifdef RICHDEM_DEBUG
   <<" ("<<file<<" : "<<func<<" : "<<line<<")"
   #endif
   <<"\033[39m"
-  <<log_flag_chars_end.at(flag)
+  <<log_flag_chars_end(flag)
   <<std::endl;
 }
 
