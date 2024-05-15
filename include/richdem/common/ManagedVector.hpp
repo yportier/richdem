@@ -18,7 +18,7 @@ class ManagedVector {
 
   std::unique_ptr<T[]> _data;
   bool   _owned = true;        ///< If this is true, we are responsible for clean-up of the data
-  std::size_t _size  = 0;           ///< Number of elements being managed
+  std::size_t _size  = 0;      ///< Number of elements being managed
 
  public:
   ///Creates an empty ManagedVector
@@ -40,8 +40,11 @@ class ManagedVector {
 
     template<class Archive>
     void load(Archive & ar, const unsigned int version){
-      _owned = true;
+      ar & _owned;
       ar & _size;
+
+      // Override: we can't find the original owner from the serialized copy
+      _owned = true;
       _data.reset(new T[_size]);
       for(size_t i=0;i<_size;i++){
         ar & _data[i];

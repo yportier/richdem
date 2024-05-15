@@ -9,6 +9,7 @@
 #include <boost/archive/binary_oarchive.hpp>
 #endif
 
+#include <filesystem>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -103,18 +104,22 @@ int main(int argc, char** argv) {
 
   #ifdef RICHDEM_USE_BOOST_SERIALIZATION
     dh::DepressionHierarchy<double> deps;
-    if(save_dh_filename.empty()) {
-      deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
-      if(!save_dh_filename.empty()) {
+    if(!save_dh_filename.empty()) {
+      if(std::filesystem::exists(save_dh_filename)){
+        std::ifstream ifs(save_dh_filename);
+        boost::archive::binary_iarchive ia(ifs);
+        ia >> deps >> flowdirs;
+        std::cout<<"m Loading DH from "<<save_dh_filename<<std::endl;
+      } else {
+        deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
         // make an archive
         std::ofstream ofs(save_dh_filename);
         boost::archive::binary_oarchive oa(ofs);
         oa << deps << flowdirs;
+        std::cout<<"m Saving DH to "<<save_dh_filename<<std::endl;
       }
     } else {
-      std::ifstream ifs(save_dh_filename);
-      boost::archive::binary_iarchive ia(ifs);
-      ia >> deps >> flowdirs;
+      deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
     }
 #else
   auto deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);

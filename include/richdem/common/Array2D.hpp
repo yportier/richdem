@@ -134,7 +134,7 @@ class Array2D {
 
   ///If TRUE, loadData() loads data from the cache assuming  the Native format.
   ///Otherwise, it assumes it is loading from a GDAL file.
-  bool from_cache;
+  bool from_cache = false;
 
   #ifdef RICHDEM_USE_BOOST_SERIALIZATION
     friend class boost::serialization::access;
