@@ -1,3 +1,4 @@
+import glob
 import os
 import re
 import subprocess
@@ -17,15 +18,6 @@ BUILD_ARGS = {
     "gcc": ["-std=c++17", "-g", "-fvisibility=hidden", "-O3", "-Wno-unknown-pragmas"],
     "unix": ["-std=c++17", "-g", "-fvisibility=hidden", "-O3", "-Wno-unknown-pragmas"],
 }
-
-library_dirs = []
-if sys.platform.startswith("win"):
-    library_dirs.extend(
-        [
-            os.path.join(sys.prefix, "Library", "lib"),
-            os.path.join(sys.prefix, "Library", "bin"),
-        ]
-    )
 
 # Magic that hooks compiler specific arguments up with the compiler
 class build_ext_compiler_check(_build_ext):
@@ -82,10 +74,8 @@ print("Using RichDEM hash={0}, time={1}".format(richdem_git_hash, richdem_compil
 ext_modules = [
     Pybind11Extension(
         "_richdem",
-        ["src/pywrapper.cpp"],
-        include_dirs=["lib/"],
-        library_dirs=library_dirs,
-        libraries=["richdem"],
+        ["src/pywrapper.cpp"] + list(glob.glob("lib/richdem/src/**/*.cpp", recursive=True)),
+        include_dirs=["lib/richdem/include"],
         define_macros=[
             ("DOCTEST_CONFIG_DISABLE", None),
             ("RICHDEM_COMPILE_TIME", f'"\\"{richdem_compile_time}\\""'),
@@ -111,7 +101,7 @@ It can flood or breach depressions, as well as calculate flow accumulation, slop
 # TODO: https://packaging.python.org/tutorials/distributing-packages/#configuring-your-project
 setuptools.setup(
   name              = 'richdem',
-  version           = '0.3.5',
+  version           = '2.1.1',
   description       = 'High-Performance Terrain Analysis',
   long_description  = long_description,
   url               = 'https://github.com/r-barnes/richdem',
@@ -133,8 +123,7 @@ setuptools.setup(
   keywords         = 'GIS terrain hydrology geomorphology raster',
   #packages        = find_packages(exclude=['contrib', 'docs', 'tests*']),
   install_requires = [
-    "numpy>=1.7,<2; python_version > '3.4' or python_version < '3.0'",
-    "numpy>=1.7,<1.12; python_version < '3.4' and python_version > '3.0'"
+    "numpy>=1.7,<2; python_version > '3.8'",
   ],
   # extras_require    = {
   #   ':python_version > "3.4"': [
@@ -169,12 +158,8 @@ setuptools.setup(
 
       # Specify the Python versions you support here. In particular, ensure
       # that you indicate whether you support Python 2, Python 3 or both.
-      'Programming Language :: Python :: 2',
-      'Programming Language :: Python :: 2.6',
-      'Programming Language :: Python :: 2.7',
-      'Programming Language :: Python :: 3',
-      'Programming Language :: Python :: 3.2',
-      'Programming Language :: Python :: 3.3',
-      'Programming Language :: Python :: 3.4',
+      'Programming Language :: Python :: 3.8',
+      'Programming Language :: Python :: 3.9',
+      'Programming Language :: Python :: 3.10',
   ]
 )
