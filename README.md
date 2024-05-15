@@ -129,7 +129,7 @@ commands into a cell and running it.
 
     !pip install pybind11
     !git clone --recursive https://github.com/r-barnes/richdem.git ghrichdem
-    !cd ghrichdem/wrappers/pyrichdem && python3 setup.py install --user
+    !cd ghrichdem/wrappers/pyrichdem && pip install .
 
 ### From PyPI using pip
 
