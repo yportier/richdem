@@ -1,5 +1,4 @@
-#ifndef _richdem_flow_accumulation_hpp_
-#define _richdem_flow_accumulation_hpp_
+#pragma once
 
 #include <richdem/flowmet/Fairfield1991.hpp>
 #include <richdem/flowmet/Freeman1991.hpp>
@@ -28,5 +27,3 @@ template<class elev_t, class accum_t> void FA_D8                 (const Array2D<
 template<class elev_t, class accum_t> void FA_D4                 (const Array2D<elev_t> &elevations, Array2D<accum_t> &accum)                { Array3D<float> props(elevations); FM_D4                             (elevations, props         );  FlowAccumulation(props, accum); }
 
 }
-
-#endif

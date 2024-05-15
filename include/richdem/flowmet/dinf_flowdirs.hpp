@@ -8,8 +8,7 @@ described in Barnes (TODO).
 
   Richard Barnes (rbarnes@umn.edu), 2015
 */
-#ifndef _richdem_dinf_flowdirs_hpp_
-#define _richdem_dinf_flowdirs_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <richdem/common/Array2D.hpp>
@@ -152,5 +151,3 @@ void dinf_flow_directions(const Array2D<T> &elevations, Array2D<float> &flowdirs
 }
 
 }
-
-#endif

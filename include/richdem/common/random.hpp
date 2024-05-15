@@ -1,7 +1,6 @@
 //This file contains a number of functions for getting seeding random number
 //generators and pulling numbers from them in a thread-safe manner.
-#ifndef _richdem_random_hpp_
-#define _richdem_random_hpp_
+#pragma once
 
 #include <cstdint>
 #include <random>
@@ -49,5 +48,3 @@ RandomEngineState SaveRandomState();
 void SetRandomState(const RandomEngineState &res);
 
 }
-
-#endif

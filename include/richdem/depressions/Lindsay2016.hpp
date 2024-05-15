@@ -1,5 +1,4 @@
-#ifndef _richdem_lindsay2016_hpp_
-#define _richdem_lindsay2016_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <richdem/common/Array2D.hpp>
@@ -439,5 +438,3 @@ void Lindsay2016(Array2D<uint16_t> &/*dem*/, int /*mode*/, bool /*eps_gradients*
 }
 
 }
-
-#endif

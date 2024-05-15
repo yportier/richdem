@@ -1,5 +1,4 @@
-#ifndef _richdem_logger_hpp_
-#define _richdem_logger_hpp_
+#pragma once
 
 #include <iostream>
 #include <sstream>
@@ -77,5 +76,3 @@ class StreamLogger {
 #define RDLOG_WARN     StreamLogger(LogFlag::WARN,     __FILE__, __func__, __LINE__)
 
 }
-
-#endif

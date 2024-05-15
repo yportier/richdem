@@ -7,8 +7,8 @@
   Tarboton (1997). It incorporates minor alterations and additional safe-guards
   described in Barnes (2013, TODO).
 */
-#ifndef _richdem_dinf_methods_hpp_
-#define _richdem_dinf_methods_hpp_
+
+#pragma once
 
 #include <richdem/common/Array2D.hpp>
 #include <richdem/common/constants.hpp>
@@ -333,5 +333,3 @@ void BucketFillFromEdges(
 }
 
 }
-
-#endif

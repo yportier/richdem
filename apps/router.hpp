@@ -1,5 +1,4 @@
-#ifndef _richdem_router_hpp_
-#define _richdem_router_hpp_
+#pragma once
 
 #include "gdal_priv.h"
 #include <richdem/common/Array2D.hpp>
@@ -48,5 +47,3 @@ int PerformAlgorithm(std::string inputfile, Args... args){
       return -1;
   }
 }
-
-#endif

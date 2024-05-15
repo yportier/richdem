@@ -4,8 +4,7 @@
 
   Richard Barnes (rbarnes@umn.edu), 2015
 */
-#ifndef _richdem_grid_hpp_
-#define _richdem_grid_hpp_
+#pragma once
 
 #include <vector>
 #include <queue>
@@ -122,5 +121,3 @@ class GridCellZk_low_pq : public std::priority_queue<GridCellZk_low<T>, std::vec
 };
 
 }
-
-#endif

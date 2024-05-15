@@ -4,8 +4,7 @@
 
   Richard Barnes (rbarnes@umn.edu), 2015
 */
-#ifndef _richdem_priority_flood_hpp_
-#define _richdem_priority_flood_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <richdem/common/Array2D.hpp>
@@ -931,5 +930,3 @@ void PriorityFlood_Barnes2014_max_dep(
 }
 
 }
-
-#endif

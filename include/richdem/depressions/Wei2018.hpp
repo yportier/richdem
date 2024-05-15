@@ -1,5 +1,4 @@
-#ifndef _richdem_wei2008_hpp_
-#define _richdem_wei2008_hpp_
+#pragma once
 
 #include <richdem/common/Array2D.hpp>
 #include <richdem/common/logger.hpp>
@@ -202,5 +201,3 @@ void PriorityFlood_Wei2018(Array2D<T> &dem){
 }
 
 }
-
-#endif

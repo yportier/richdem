@@ -1,5 +1,4 @@
-#ifndef _richdem_depressions_
-#define _richdem_depressions_
+#pragma once
 
 #include <richdem/common/constants.hpp>
 #include <richdem/depressions/Barnes2014.hpp>
@@ -11,7 +10,7 @@
 namespace richdem {
 
 template<Topology topo, class T>
-void FillDepressions(Array2D<T> &dem){ 
+void FillDepressions(Array2D<T> &dem){
   if(topo==Topology::D8)
     PriorityFlood_Zhou2016(dem);
   else if(topo==Topology::D4)
@@ -24,5 +23,3 @@ template<Topology topo, class T> void FillDepressionsEpsilon(Array2D<T> &dem){ P
 template<Topology topo, class T> void BreachDepressions     (Array2D<T> &dem){ CompleteBreaching_Lindsay2016<topo>  (dem); }
 
 }
-
-#endif

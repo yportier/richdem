@@ -1,5 +1,4 @@
-#ifndef _richdem_loaders_hpp_
-#define _richdem_loaders_hpp_
+#pragma once
 
 #include <richdem/common/Array2D.hpp>
 #include <richdem/common/gdal.hpp>
@@ -10,12 +9,12 @@ namespace richdem {
 template<class T>
 void LoadGDAL(
   const std::string &filename,
-  Array2D<T> &arr, 
+  Array2D<T> &arr,
   uint64_t padx        = 0,
   uint64_t pady        = 0,
-  uint64_t xOffset     = 0, 
-  uint64_t yOffset     = 0, 
-  uint64_t part_width  = 0, 
+  uint64_t xOffset     = 0,
+  uint64_t yOffset     = 0,
+  uint64_t part_width  = 0,
   uint64_t part_height = 0
 ){
   arr.clear();
@@ -128,7 +127,7 @@ void SaveGDAL(const Array2D<T> &arr, const std::string &filename, const std::str
     std::string proc_hist;
     if(arr.metadata.count("PROCESSING_HISTORY")>0)
       proc_hist = arr.metadata.at("PROCESSING_HISTORY");
-    
+
     if(!proc_hist.empty())
       proc_hist+="\n";
 
@@ -204,5 +203,3 @@ void SaveGDAL(const Array2D<T> &arr, const std::string &filename, const std::str
 #endif
 
 }
-
-#endif

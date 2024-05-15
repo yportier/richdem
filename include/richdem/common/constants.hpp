@@ -20,8 +20,7 @@
    103
     4
 */
-#ifndef _richdem_constants_hpp_
-#define _richdem_constants_hpp_
+#pragma once
 
 #include <array>
 #include <cstdint>
@@ -164,5 +163,3 @@ inline std::string TopologyName(Topology topo){
 }
 
 }
-
-#endif

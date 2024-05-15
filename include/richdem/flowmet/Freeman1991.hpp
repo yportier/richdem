@@ -1,5 +1,4 @@
-#ifndef _richdem_Freeman1991_hpp_
-#define _richdem_Freeman1991_hpp_
+#pragma once
 
 #include <richdem/common/constants.hpp>
 #include <richdem/common/logger.hpp>
@@ -80,5 +79,3 @@ void FM_Freeman(
 }
 
 }
-
-#endif

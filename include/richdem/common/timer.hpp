@@ -4,8 +4,7 @@
 
   Richard Barnes (rbarnes@umn.edu), 2015
 */
-#ifndef _richdem_timer_
-#define _richdem_timer_
+#pragma once
 
 #include <chrono>
 #include <stdexcept>
@@ -86,5 +85,3 @@ class Timer{
 };
 
 }
-
-#endif

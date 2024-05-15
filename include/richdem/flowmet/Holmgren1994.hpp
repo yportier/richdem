@@ -1,5 +1,4 @@
-#ifndef _richdem_Holmgren1994_
-#define _richdem_Holmgren1994_
+#pragma once
 
 #include <richdem/common/constants.hpp>
 #include <richdem/common/logger.hpp>
@@ -83,5 +82,3 @@ void FM_Holmgren(
 }
 
 }
-
-#endif

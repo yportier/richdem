@@ -1,5 +1,4 @@
-#ifndef _richdem_hpp_
-#define _richdem_hpp_
+#pragma once
 
 #include "common/Array2D.hpp"
 #include "common/constants.hpp"
@@ -39,6 +38,4 @@
 
 #ifdef USEGDAL
 #include "common/gdal.hpp"
-#endif
-
 #endif

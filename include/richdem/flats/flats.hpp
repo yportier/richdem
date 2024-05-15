@@ -1,5 +1,4 @@
-#ifndef _richdem_flats_hpp_
-#define _richdem_flats_hpp_
+#pragma once
 
 #include <richdem/flats/Barnes2014.hpp>
 
@@ -28,5 +27,3 @@ void ResolveFlatsEpsilon(
 }
 
 }
-
-#endif

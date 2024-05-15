@@ -1,13 +1,13 @@
 /**
   @file
-  @brief Defines a 3D array object with convenient methods for working raster 
-         data where information about neighbours needs to be stored and 
+  @brief Defines a 3D array object with convenient methods for working raster
+         data where information about neighbours needs to be stored and
          processed
 
   Richard Barnes (rbarnes@umn.edu), 2018
 */
-#ifndef _richdem_array_3d_hpp_
-#define _richdem_array_3d_hpp_
+
+#pragma once
 
 #include "gdal.hpp"
 #include <vector>
@@ -62,7 +62,7 @@ class Array3D {
   std::string projection;           ///< Projection of the raster
   std::map<std::string, std::string> metadata; ///< Raster's metadata in key-value pairs
 
-  //Using uint32_t for i-addressing allows for rasters of ~65535^2. These 
+  //Using uint32_t for i-addressing allows for rasters of ~65535^2. These
   //dimensions fit easily within an int32_t xy-address.
   typedef int32_t     xy_t;         ///< xy-addressing data type
   typedef std::size_t i_t;          ///< i-addressing data type
@@ -137,7 +137,7 @@ class Array3D {
     geotransform       = other.geotransform;
     metadata           = other.metadata;
     projection         = other.projection;
-    basename           = other.basename;    
+    basename           = other.basename;
     resize(other.width(), other.height(), val);
   }
 
@@ -157,7 +157,7 @@ class Array3D {
     geotransform       = other.geotransform;
     metadata           = other.metadata;
     projection         = other.projection;
-    basename           = other.basename;    
+    basename           = other.basename;
     resize(other.width(), other.height(), val);
   }
 
@@ -293,7 +293,7 @@ class Array3D {
 
     @param[in]   width0    New width of the raster
     @param[in]   height0   New height of the raster
-    @param[in]   val0      Value to set all the cells to. Defaults to the 
+    @param[in]   val0      Value to set all the cells to. Defaults to the
                           raster's template type default value
   */
   void resize(const xy_t width0, const xy_t height0, const T& val0 = T()){
@@ -403,5 +403,3 @@ class Array3D {
 };
 
 }
-
-#endif

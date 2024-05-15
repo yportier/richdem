@@ -1,5 +1,4 @@
-#ifndef _richdem_strahler_hpp_
-#define _richdem_strahler_hpp_
+#pragma once
 
 // template<class A>
 // static inline void StrahlerNumber(
@@ -71,7 +70,7 @@ void Strahler_Rho8(const Array2D<E> &elevations, Array2D<A> &accum){
 template<class E, class A>
 void Strahler_Quinn(const Array2D<E> &elevations, Array2D<A> &accum){
   RDLOG_ALG_NAME<<"Quinn (1991) Strahler";
-  RDLOG_CITATION<<"Quinn, P., Beven, K., Chevallier, P., Planchon, O., 1991. The Prediction Of Hillslope Flow Paths For Distributed Hydrological Modelling Using Digital Terrain Models. Hydrological Processes 5, 59–79."; 
+  RDLOG_CITATION<<"Quinn, P., Beven, K., Chevallier, P., Planchon, O., 1991. The Prediction Of Hillslope Flow Paths For Distributed Hydrological Modelling Using Digital Terrain Models. Hydrological Processes 5, 59–79.";
   KernelFlowdir(KernelHolmgren<decltype(StrahlerNumber<A>),E,A>,StrahlerNumber<A>,elevations,accum,(double)1.0);
   CleanseStrahler(accum);
 }
@@ -102,5 +101,3 @@ void Strahler_Tarboton(const Array2D<E> &elevations, Array2D<A> &accum){
 // }
 
 */
-
-#endif

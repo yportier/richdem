@@ -1,5 +1,4 @@
-#ifndef _richdem_Seibert2007_hpp_
-#define _richdem_Seibert2007_hpp_
+#pragma once
 
 namespace richdem {
 
@@ -43,8 +42,8 @@ namespace richdem {
 //   //are renumbered as follows:
 //   //    3->1    2->2    1->3    0->4    7->5    6->6    5->7    4->8
 //   //This gives the following table
-//   //  Remapped Facet #  =  -   1    2     3    4    5   6    7    8  
-//   //  Tarboton Facet #  =  -   3    2     1    0    7   6    5    4  
+//   //  Remapped Facet #  =  -   1    2     3    4    5   6    7    8
+//   //  Tarboton Facet #  =  -   3    2     1    0    7   6    5    4
 //   const int    dy_e1[9] = {0,  0 , -1 ,  -1 ,  0 ,  0 , 1 ,  1 ,  0  };
 //   const int    dx_e1[9] = {0, -1 ,  0 ,   0 ,  1 ,  1 , 0 ,  0 , -1  };
 //   const int    dy_e2[9] = {0, -1 , -1 ,  -1 , -1 ,  1 , 1 ,  1 ,  1  };
@@ -140,5 +139,3 @@ namespace richdem {
 // }
 
 }
-
-#endif

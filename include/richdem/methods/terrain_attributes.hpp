@@ -1,5 +1,4 @@
-#ifndef _richdem_terrain_attributes_hpp_
-#define _richdem_terrain_attributes_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <richdem/common/Array2D.hpp>
@@ -134,7 +133,7 @@ void TA_CTI(
   @param[out]  &profile_curvature
     Returns the profile curvature as per Zevenbergen and Thorne 1987.
     0 indicates a flat surface.
-  @param[out]  &planform_curvature  
+  @param[out]  &planform_curvature
     Returns the planform curvature as per Zevenbergen and Thorne 1987.
     0 indicates a flat surface.
 
@@ -479,8 +478,8 @@ void TA_aspect(
 */
 template<class T>
 void TA_curvature(
-  const Array2D<T> &elevations, 
-  Array2D<float>   &curvatures, 
+  const Array2D<T> &elevations,
+  Array2D<float>   &curvatures,
   float zscale = 1.0f
 ){
   RDLOG_ALG_NAME<<"Curvature attribute calculation";
@@ -534,5 +533,3 @@ void TA_profile_curvature(
 }
 
 }
-
-#endif

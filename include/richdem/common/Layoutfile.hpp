@@ -18,8 +18,7 @@
 
   Richard Barnes (rbarnes@umn.edu), 2015
 */
-#ifndef _richdem_layoutfile_hpp_
-#define _richdem_layoutfile_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <string>
@@ -233,7 +232,7 @@ class LayoutfileWriter {
     path  = "";
     gridx = 0;
     gridy = 0;
-    
+
     std::size_t last_slash  = layout_filename.find_last_of(RICHDEM_SLASH_CHAR);
     std::size_t last_period = layout_filename.find_last_of(".");
     if(last_slash!=std::string::npos)
@@ -273,5 +272,3 @@ class LayoutfileWriter {
 };
 
 }
-
-#endif

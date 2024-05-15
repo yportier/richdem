@@ -1,12 +1,11 @@
 /**
   @file
-  @brief Defines RichDEM version, git hash, compilation time. Used for 
+  @brief Defines RichDEM version, git hash, compilation time. Used for
          program/app headers and for processing history entries.
 
   Richard Barnes (rbarnes@umn.edu), 2015
 */
-#ifndef _richdem_version_hpp_
-#define _richdem_version_hpp_
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -69,5 +68,3 @@ inline std::string PrintRichdemHeader(int argc, char **argv){
 }
 
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _richdem_managed_vector_hpp_
-#define _richdem_managed_vector_hpp_
+#pragma once
 
 #include <memory>
 //#include <iostream>
@@ -181,5 +180,3 @@ class ManagedVector {
 };
 
 }
-
-#endif

@@ -15,8 +15,7 @@
 
   Richard Barnes (rbarnes@umn.edu), 2015
 */
-#ifndef _richdem_progress_bar_hpp_
-#define _richdem_progress_bar_hpp_
+#pragma once
 
 #include <richdem/common/timer.hpp>
 
@@ -63,7 +62,7 @@ class ProgressBar{
         return omp_get_thread_num();
       #else
         return 1;
-      #endif      
+      #endif
     }
 
   public:
@@ -144,5 +143,3 @@ class ProgressBar{
 };
 
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _richdem_garbrecht_hpp_
-#define _richdem_garbrecht_hpp_
+#pragma once
 
 #include <deque>
 #include <cstdint>
@@ -43,18 +42,18 @@ void GradientTowardsLower(
 			int x=flats[i].x;
 			int y=flats[i].y;
 			for(int n=1;n<=8;n++){
-				if(	elevations(x+dx[n],y+dy[n])<elevations(x,y) && 
+				if(	elevations(x+dx[n],y+dy[n])<elevations(x,y) &&
 					flowdirs(x+dx[n],y+dy[n])!=NO_FLOW && flowdirs(x+dx[n],y+dy[n])!=flowdirs.noData()
 				){
 					increment_elevation=false;
 					break;
 				}
-				else if(inc1(x+dx[n],y+dy[n])<loops && 
+				else if(inc1(x+dx[n],y+dy[n])<loops &&
 						elevations(x+dx[n],y+dy[n])==elevations(x,y)
 				){
 					increment_elevation=false;
 					break;
-				}	
+				}
 			}
 			if(increment_elevation){
 				inc1(x,y)++;
@@ -116,7 +115,7 @@ template<class T>
 void CombineGradients(
 	Array2D<T>             &elevations,
 	const Array2D<int32_t> &inc1,
-	const Array2D<int32_t> &inc2, 
+	const Array2D<int32_t> &inc2,
 	float epsilon //TODO
 ){
   RDLOG_PROGRESS<<"Combining the gradients...";
@@ -147,5 +146,3 @@ void GarbrechtAlg(Array2D<T> &elevations, Array2D<uint8_t> &flowdirs){
 }
 
 }
-
-#endif

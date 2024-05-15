@@ -1,5 +1,4 @@
-#ifndef _richdem_OCallaghan1984_hpp_
-#define _richdem_OCallaghan1984_hpp_
+#pragma once
 
 #include <richdem/common/constants.hpp>
 #include <richdem/common/logger.hpp>
@@ -92,5 +91,3 @@ void FM_D4(const Array2D<elev_t> &elevations, Array3D<float> &props){
 }
 
 }
-
-#endif

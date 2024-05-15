@@ -4,8 +4,7 @@
 
   Richard Barnes (rbarnes@umn.edu), 2015
 */
-#ifndef _richdem_d8_flowdirs_hpp_
-#define _richdem_d8_flowdirs_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <richdem/common/Array2D.hpp>
@@ -123,5 +122,3 @@ void d8_flow_directions(
 }
 
 }
-
-#endif

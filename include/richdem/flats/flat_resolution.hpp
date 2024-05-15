@@ -6,8 +6,7 @@
   Contains code to generate an elevation mask which is guaranteed to drain
   a flat using a convergent flow pattern (unless it's a mesa)
 */
-#ifndef _richdem_flat_resolution_hpp_
-#define _richdem_flat_resolution_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <richdem/common/ProgressBar.hpp>
@@ -605,5 +604,3 @@ void barnes_flat_resolution_d8(Array2D<T> &elevations, Array2D<U> &flowdirs, boo
 }
 
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _richdem_Orlandini2003_hpp_
-#define _richdem_Orlandini2003_hpp_
+#pragma once
 
 namespace richdem {
 
@@ -40,8 +39,8 @@ namespace richdem {
 //   //are renumbered as follows:
 //   //    3->1    2->2    1->3    0->4    7->5    6->6    5->7    4->8
 //   //This gives the following table
-//   //  Remapped Facet #  =  -   1    2     3    4    5   6    7    8  
-//   //  Tarboton Facet #  =  -   3    2     1    0    7   6    5    4  
+//   //  Remapped Facet #  =  -   1    2     3    4    5   6    7    8
+//   //  Tarboton Facet #  =  -   3    2     1    0    7   6    5    4
 //   const int    dy_e1[9] = {0,  0 , -1 ,  -1 ,  0 ,  0 , 1 ,  1 ,  0  };
 //   const int    dx_e1[9] = {0, -1 ,  0 ,   0 ,  1 ,  1 , 0 ,  0 , -1  };
 //   const int    dy_e2[9] = {0, -1 , -1 ,  -1 , -1 ,  1 , 1 ,  1 ,  1  };
@@ -69,10 +68,10 @@ namespace richdem {
 //   //We also convert Orlandini's coordinate system to the RichDEM system like so:
 //   //    2->1, 3->2, 6->3, 9->4, 8->5, 7->6, 4->7, 1->8
 //   //The remapped Table 1 is then
-//   //                         023  063  069   089  087   047  041  021 
-//   //                p1  =      1    3    3     5    5     7    7    1 
-//   //                p2  =      2    2    4     4    6     6    8    8 
-//   //             sigma  =     -1    1   -1     1   -1     1   -1    1 
+//   //                         023  063  069   089  087   047  041  021
+//   //                p1  =      1    3    3     5    5     7    7    1
+//   //                p2  =      2    2    4     4    6     6    8    8
+//   //             sigma  =     -1    1   -1     1   -1     1   -1    1
 //   const int       p1[9] = {0,  1 ,  3 ,  3 ,   5,   5,    7,   7,   1  };
 //   const int       p2[9] = {0,  2 ,  2 ,  4 ,   4,   6,    6,   8,   8  };
 //   const int    sigma[9] = {0,  -1,  1 , -1 ,   1,  -1,    1,  -1,   1  };
@@ -154,7 +153,7 @@ namespace richdem {
 //     } else {
 //       delta(x,y) = d1me;
 //       p = p1[nmax];
-//     }    
+//     }
 //   }
 
 //   const int nx = x+dx[p];
@@ -188,5 +187,3 @@ namespace richdem {
 // }
 
 }
-
-#endif

@@ -6,8 +6,7 @@
   Contains code to generate an elevation mask which is guaranteed to drain
   a flat using a convergent flow pattern (unless it's a mesa)
 */
-#ifndef _richdem_Barnes2014_flat_resolution_hpp_
-#define _richdem_Barnes2014_flat_resolution_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <richdem/common/ProgressBar.hpp>
@@ -259,11 +258,11 @@ static void LabelFlat(
     to_fill.pop();
 
     //Higher and lower cells are not part of the flat
-    if(elevations(c.x,c.y)!=target_elevation) 
+    if(elevations(c.x,c.y)!=target_elevation)
       continue;
 
     //Already labeled cells are in the same flat, but have been dealt with
-    if(labels(c.x,c.y)>0)                     
+    if(labels(c.x,c.y)>0)
       continue;
 
     //Okay, this cell is part of the flat. Label it.
@@ -352,7 +351,7 @@ static void FindFlatEdges(
       //If the focal cell has no flow and has a neighbour which is at a higher
       //elevation, then the focal cell is at the edge of a flat
       } else if(
-           flats(x,y)==IS_A_FLAT     
+           flats(x,y)==IS_A_FLAT
         && elevations(x,y)<elevations(nx,ny)
       ){
         #pragma omp critical
@@ -409,7 +408,7 @@ void GetFlatMask(
 
   RDLOG_ALG_NAME<<"Barnes (2014) Flat Resolution Flat Mask Generation";
   RDLOG_CITATION<<"Barnes, R., Lehman, C., Mulla, D., 2014a. An efficient assignment of drainage direction over flat surfaces in raster digital elevation models. Computers & Geosciences 62, 128–135. doi:10.1016/j.cageo.2013.01.009";
-  
+
   Array2D<int8_t> flats;
   FindFlats(elevations, flats);
 
@@ -456,7 +455,7 @@ void GetFlatMask(
   RDLOG_MEM_USE<<"The flat height vector will require approximately "
                <<(group_number*((long)sizeof(int))/1024/1024)
                <<"MB of RAM.";
-        
+
   RDLOG_PROGRESS<<"Creating flat height vector...";
   std::vector<int> flat_height(group_number);
 
@@ -638,5 +637,3 @@ void ResolveFlatsFlowdirs_Barnes2014(
 }
 
 }
-
-#endif

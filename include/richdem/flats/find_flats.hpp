@@ -1,5 +1,4 @@
-#ifndef _richdem_find_flats_hpp_
-#define _richdem_find_flats_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <richdem/common/ProgressBar.hpp>
@@ -69,5 +68,3 @@ void FindFlats(
 }
 
 }
-
-#endif
