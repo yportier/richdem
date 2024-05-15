@@ -17,10 +17,7 @@ int main(int argc, char** argv) {
 
   std::string topography_filename;
   std::string output_prefix;
-<<<<<<< HEAD
-=======
   std::string save_dh_filename;
->>>>>>> 0d0232a (Add serialization to CLI programs)
   double surface_water_level = std::numeric_limits<double>::quiet_NaN();
   std::string surface_water_filename;
   double ocean_level;
@@ -32,20 +29,11 @@ int main(int argc, char** argv) {
   const auto swl_ptr = app.add_option("--swl", surface_water_level, "Surface water level as a numeric constant");
   app.add_option("--swf", surface_water_filename, "File containing surface water levels")->excludes(swl_ptr);
   app.add_option("ocean_level", ocean_level, "Elevation of the ocean")->required();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 3c9c20b (Apply formatting)
   app.add_option(
       "--save_dh",
       save_dh_filename,
       "Filename where you would like the depression hierarchy to be saved for reuse (optional, requires Boost). If the "
       "file is present, DH is loaded from it; otherwise, DH is saved to it.");
-<<<<<<< HEAD
->>>>>>> 0d0232a (Add serialization to CLI programs)
-=======
->>>>>>> 3c9c20b (Apply formatting)
 
   CLI11_PARSE(app, argc, argv);
 
@@ -68,15 +56,7 @@ int main(int argc, char** argv) {
   rd::Array2D<double> wtd;
   if (surface_water_filename.empty()) {
     // All cells have the same amount of water
-<<<<<<< HEAD
-<<<<<<< HEAD
-    wtd.resize(topo.width(), topo.height(), surface_water_level);
-=======
     wtd = rd::Array2D<double>(topo, surface_water_level);
->>>>>>> 0d0232a (Add serialization to CLI programs)
-=======
-    wtd = rd::Array2D<double>(topo, surface_water_level);
->>>>>>> 3c9c20b (Apply formatting)
   } else {
     wtd = rd::Array2D<double>(surface_water_filename);
   }
