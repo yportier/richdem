@@ -11,6 +11,7 @@ cmake_policy(SET CMP0077 NEW)
 find_package(GDAL)
 find_package(OpenMP REQUIRED)
 find_package(MPI)
+find_package(Boost COMPONENTS serialization)
 
 set(CMAKE_MACOSX_RPATH 1)
 set(BUILD_SHARED_LIBS ON)
@@ -64,6 +65,10 @@ target_compile_features(richdem
 
 if(OpenMP_CXX_FOUND)
   target_link_libraries(richdem PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
+if(Boost_SERIALIZATION_FOUND)
+  target_compile_definitions(richdem PUBLIC -DRICHDEM_USE_BOOST_SERIALIZATION)
 endif()
 
 target_compile_options(richdem
