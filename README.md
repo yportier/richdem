@@ -113,7 +113,8 @@ After installing the *richdem* library (as described above), you can build
 You can now build the *richdem* Python package,
 
     $ cd wrappers/pyrichdem
-    $ pip install -e .
+    $ pip install pybind11
+    $ python3 setup.py install --user
 
 ### From conda
 
@@ -121,6 +122,14 @@ To install a pre-built version of *richdem* using *conda*,
 
     $ conda install richdem -c conda-forge
 
+### From Google Colabs
+
+You can compile and run RichDEM from source in Google Colabs by placing these
+commands into a cell and running it.
+
+    !pip install pybind11
+    !git clone --recursive https://github.com/r-barnes/richdem.git ghrichdem
+    !cd ghrichdem/wrappers/pyrichdem && python3 setup.py install --user
 
 ### From PyPI using pip
 
