@@ -80,8 +80,8 @@ static SubtreeDepressionInfo FindDepressionsToFill(
 
 template<class elev_t, class wtd_t>
 void FillDepressions(
-  const int                             pit_cell,
-  const int                             out_cell,
+  const flat_c_idx                      pit_cell,
+  const flat_c_idx                      out_cell,
   const std::unordered_set<dh_label_t> &dep_labels,
   double                                water_vol,
   const Array2D<elev_t>                &topo,
@@ -175,10 +175,12 @@ void FillSpillMerge(
 
   //Sanity checks
   for(int d=1;d<(int)deps.size();d++){
-    const auto &dep = deps.at(d);
-    assert(dep.water_vol==0 || dep.water_vol<=dep.dep_vol);
-    assert(dep.water_vol==0 || (dep.lchild==NO_VALUE && dep.rchild==NO_VALUE) || (dep.lchild!=NO_VALUE && deps.at(dep.lchild).water_vol<dep.water_vol));
-    assert(dep.water_vol==0 || (dep.lchild==NO_VALUE && dep.rchild==NO_VALUE) || (dep.rchild!=NO_VALUE && deps.at(dep.rchild).water_vol<dep.water_vol));
+    #ifndef NDEBUG
+      const auto &dep = deps.at(d);
+      assert(dep.water_vol==0 || dep.water_vol<=dep.dep_vol);
+      assert(dep.water_vol==0 || (dep.lchild==NO_VALUE && dep.rchild==NO_VALUE) || (dep.lchild!=NO_VALUE && deps.at(dep.lchild).water_vol<dep.water_vol));
+      assert(dep.water_vol==0 || (dep.lchild==NO_VALUE && dep.rchild==NO_VALUE) || (dep.rchild!=NO_VALUE && deps.at(dep.rchild).water_vol<dep.water_vol));
+    #endif
   }
 
   RDLOG_PROGRESS<<"p Finding filled...";
@@ -768,8 +770,8 @@ static SubtreeDepressionInfo FindDepressionsToFill(
 ///@return         N/A
 template<class elev_t, class wtd_t>
 void FillDepressions(
-  const int                             pit_cell,
-  const int                             out_cell,
+  const flat_c_idx                      pit_cell,
+  const flat_c_idx                      out_cell,
   const std::unordered_set<dh_label_t> &dep_labels,
   double                                water_vol,
   const Array2D<elev_t>                &topo,
@@ -898,11 +900,11 @@ void FillDepressions(
 
     //Add focal cell's neighbours to expand the search for more volume.
     for(int n=1;n<=8;n++){
-      const int nx = c.x + d8x[n];       // Get neighbour's x-coordinate using an offset
-      const int ny = c.y + d8y[n];       // Get neighbour's y-coordinate using an offset
-      if(!topo.inGrid(nx,ny))           // Is this cell in the grid?
-        continue;                       // Nope: out of bounds.
-      const int ni = topo.xyToI(nx,ny); // Get neighbour's flat index
+      const auto nx = c.x + d8x[n];      // Get neighbour's x-coordinate using an offset
+      const auto ny = c.y + d8y[n];      // Get neighbour's y-coordinate using an offset
+      if(!topo.inGrid(nx,ny))            // Is this cell in the grid?
+        continue;                        // Nope: out of bounds.
+      const auto ni = topo.xyToI(nx,ny); // Get neighbour's flat index
 
       //Don't add cells which are not part of the depression unless the cell in
       //question is the outlet cell.
