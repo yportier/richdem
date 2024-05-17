@@ -39,8 +39,8 @@ int main(int argc, char** argv) {
 //`GetDepressionHierarchy()`.
 #pragma omp parallel for
   for (unsigned int i = 0; i < label.size(); i++) {
-    if (topo.isNoData(i) ||
-        topo(i) == ocean_level) {  // Ocean Level is assumed to be lower than any other cells (even Death Valley)
+    // Ocean Level is assumed to be lower than any other cells (even Death Valley)
+    if (topo.isNoData(i) || topo(i) == ocean_level) {
       label(i) = dh::OCEAN;
     }
   }

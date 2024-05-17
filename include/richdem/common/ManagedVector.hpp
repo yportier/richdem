@@ -1,7 +1,11 @@
 #pragma once
 
+#ifdef RICHDEM_USE_BOOST_SERIALIZATION
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#endif
+
 #include <memory>
-//#include <iostream>
 
 namespace richdem {
 
@@ -13,11 +17,36 @@ class ManagedVector {
 
   std::unique_ptr<T[]> _data;
   bool   _owned = true;        ///< If this is true, we are responsible for clean-up of the data
-  std::size_t _size  = 0;           ///< Number of elements being managed
+  std::size_t _size  = 0;      ///< Number of elements being managed
 
  public:
   ///Creates an empty ManagedVector
   ManagedVector() = default;
+
+  #ifdef RICHDEM_USE_BOOST_SERIALIZATION
+    friend class boost::serialization::access;
+    // When the class Archive corresponds to an output archive, the
+    // & operator is defined similar to <<.  Likewise, when the class Archive
+    // is a type of input archive the & operator is defined similar to >>.
+    template<class Archive>
+    void save(Archive & ar, const unsigned int version) const {
+      ar & _size;
+      for(size_t i=0;i<_size;i++){
+        ar & _data[i];
+      }
+    }
+
+    template<class Archive>
+    void load(Archive & ar, const unsigned int version){
+      ar & _size;
+      _owned = true;
+      _data.reset(new T[_size]);
+      for(size_t i=0;i<_size;i++){
+        ar & _data[i];
+      }
+    }
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
+  #endif
 
   ///Creates a ManagedVector with \p size members each set to \p default_val
   ///

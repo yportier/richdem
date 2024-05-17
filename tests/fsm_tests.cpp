@@ -3,6 +3,7 @@
 #include <richdem/depressions/fill_spill_merge.hpp>
 #include <richdem/terrain_generation.hpp>
 
+#include <filesystem>
 #include <random>
 #include <sstream>
 
@@ -46,6 +47,11 @@ bool ArrayValuesAllEqual(const Array2D<T> &a, const T val){
   return true;
 }
 
+template<class T>
+bool equal_or_both_nan(const T a, const T b){
+  return (a == b || (std::isnan(a) && std::isnan(b)));
+}
+
 
 
 std::mt19937_64 gen;
@@ -55,10 +61,7 @@ Array2D<double> random_terrain(std::mt19937_64 &gen, const int min_size, const i
 
   std::uniform_int_distribution<int> size_dist(min_size, max_size);
 
-  const auto size = size_dist(gen);
-  Array2D<double> terrain(size, size);
-  generate_perlin_terrain(terrain, seed_dist(gen));
-  return terrain;
+  return generate_perlin_terrain(size_dist(gen), seed_dist(gen));
 }
 
 Array2D<double> random_integer_terrain(std::mt19937_64 &gen, const int min_size, const int max_size){
@@ -688,3 +691,64 @@ TEST_CASE("RandomizedMassConservation"){
   RandomizedMassConservation(number_of_small_tests,  10,  30);
   RandomizedMassConservation(number_of_large_tests, 100, 300);
 }
+
+#ifdef RICHDEM_USE_BOOST_SERIALIZATION
+TEST_CASE("DH serialization"){
+  auto dem = generate_perlin_terrain(100, 123456);
+
+  // Make DH
+  Array2D<dh_label_t> labels  (dem.width(), dem.height(), NO_DEP );
+  Array2D<flowdir_t>  flowdirs(dem.width(), dem.height(), NO_FLOW);
+  dem.setEdges(-1);
+  labels.setEdges(OCEAN);
+  auto deps = GetDepressionHierarchy<double,Topology::D8>(dem, labels, flowdirs);
+
+  // Run FSM
+  Array2D<double> wtd(dem.width(), dem.height(), 100);
+  FillSpillMerge(dem, labels, flowdirs, deps, wtd);
+
+  // Serialize
+  const auto tmpdir = std::filesystem::temp_directory_path();
+  const auto tmpfile = tmpdir / "serialized_array2d";
+
+  {
+    std::ofstream ofs(tmpfile);
+    boost::archive::binary_oarchive oa(ofs);
+    oa << deps << dem << labels << flowdirs << wtd;
+  }
+
+  DepressionHierarchy<double> recovered_deps;
+  Array2D<double> recovered_dem;
+  Array2D<dh_label_t> recovered_labels;
+  Array2D<flowdir_t> recovered_flowdirs;
+  Array2D<double> recovered_wtd;
+  {
+    std::ifstream ifs(tmpfile);
+    boost::archive::binary_iarchive ia(ifs);
+    ia >> recovered_deps >> recovered_dem >> recovered_labels >> recovered_flowdirs >> recovered_wtd;
+  }
+
+  for(size_t i=0;i<deps.size();i++){
+    CHECK(deps.at(i).pit_cell == recovered_deps.at(i).pit_cell);
+    CHECK(deps.at(i).out_cell == recovered_deps.at(i).out_cell);
+    CHECK(deps.at(i).parent == recovered_deps.at(i).parent);
+    CHECK(deps.at(i).odep == recovered_deps.at(i).odep);
+    CHECK(deps.at(i).geolink == recovered_deps.at(i).geolink);
+    CHECK(deps.at(i).pit_elev == recovered_deps.at(i).pit_elev);
+    CHECK(deps.at(i).out_elev == recovered_deps.at(i).out_elev);
+    CHECK(deps.at(i).lchild == recovered_deps.at(i).lchild);
+    CHECK(deps.at(i).rchild == recovered_deps.at(i).rchild);
+    CHECK(deps.at(i).ocean_parent == recovered_deps.at(i).ocean_parent);
+    CHECK(deps.at(i).ocean_linked == recovered_deps.at(i).ocean_linked);
+    CHECK(deps.at(i).dep_label == recovered_deps.at(i).dep_label);
+    CHECK(deps.at(i).cell_count == recovered_deps.at(i).cell_count);
+    CHECK(equal_or_both_nan(deps.at(i).dep_vol, recovered_deps.at(i).dep_vol));
+    CHECK(deps.at(i).water_vol == recovered_deps.at(i).water_vol);
+    CHECK(deps.at(i).total_elevation == recovered_deps.at(i).total_elevation);
+  }
+  CHECK(dem == recovered_dem);
+  CHECK(labels == recovered_labels);
+  CHECK(flowdirs == recovered_flowdirs);
+  CHECK(wtd == recovered_wtd);
+}
+#endif

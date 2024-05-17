@@ -4,6 +4,7 @@
 #include <richdem/misc/misc_methods.hpp>
 #include <richdem/ui/cli_options.hpp>
 
+#include <filesystem>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -16,6 +17,7 @@ int main(int argc, char** argv) {
 
   std::string topography_filename;
   std::string output_prefix;
+  std::string save_dh_filename;
   double surface_water_level = std::numeric_limits<double>::quiet_NaN();
   std::string surface_water_filename;
   double ocean_level;
@@ -27,6 +29,11 @@ int main(int argc, char** argv) {
   const auto swl_ptr = app.add_option("--swl", surface_water_level, "Surface water level as a numeric constant");
   app.add_option("--swf", surface_water_filename, "File containing surface water levels")->excludes(swl_ptr);
   app.add_option("ocean_level", ocean_level, "Elevation of the ocean")->required();
+  app.add_option(
+      "--save_dh",
+      save_dh_filename,
+      "Filename where you would like the depression hierarchy to be saved for reuse (optional, requires Boost). If the "
+      "file is present, DH is loaded from it; otherwise, DH is saved to it.");
 
   CLI11_PARSE(app, argc, argv);
 
@@ -49,7 +56,7 @@ int main(int argc, char** argv) {
   rd::Array2D<double> wtd;
   if (surface_water_filename.empty()) {
     // All cells have the same amount of water
-    wtd.resize(topo.width(), topo.height(), surface_water_level);
+    wtd = rd::Array2D<double>(topo, surface_water_level);
   } else {
     wtd = rd::Array2D<double>(surface_water_filename);
   }
@@ -79,7 +86,30 @@ int main(int argc, char** argv) {
   // Generate flow directions, label all the depressions, and get the hierarchy
   // connecting them
   std::cout << "p Getting depression hierarchy..." << std::endl;
+
+#ifdef RICHDEM_USE_BOOST_SERIALIZATION
+  dh::DepressionHierarchy<double> deps;
+  if (!save_dh_filename.empty()) {
+    if (std::filesystem::exists(save_dh_filename)) {
+      // Save DH
+      std::ifstream ifs(save_dh_filename);
+      boost::archive::binary_iarchive ia(ifs);
+      ia >> deps >> flowdirs;
+      std::cout << "m Loading DH from " << save_dh_filename << std::endl;
+    } else {
+      // Load DH
+      deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
+      std::ofstream ofs(save_dh_filename);
+      boost::archive::binary_oarchive oa(ofs);
+      oa << deps << flowdirs;
+      std::cout << "m Saving DH to " << save_dh_filename << std::endl;
+    }
+  } else {
+    deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
+  }
+#else
   auto deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
+#endif
 
   std::cout << "p Performing FillSpillMerge..." << std::endl;
   dh::FillSpillMerge(topo, label, flowdirs, deps, wtd);
@@ -91,9 +121,11 @@ int main(int argc, char** argv) {
   // Output the water table depth
   wtd.saveGDAL(output_prefix + "-wtd.tif");
 
-  for (unsigned int i = 0; i < topo.size(); i++)
-    if (!topo.isNoData(i))
+  for (unsigned int i = 0; i < topo.size(); i++) {
+    if (!topo.isNoData(i)) {
       wtd(i) += topo(i);
+    }
+  }
 
   // Output the new height of the hydraulic surface
   wtd.saveGDAL(output_prefix + "-hydrologic-surface-height.tif");

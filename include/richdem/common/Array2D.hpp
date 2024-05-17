@@ -14,6 +14,14 @@
 
 #include "gdal.hpp"
 
+#ifdef RICHDEM_USE_BOOST_SERIALIZATION
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/serialization/array.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
+#endif
+
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -126,7 +134,31 @@ class Array2D {
 
   ///If TRUE, loadData() loads data from the cache assuming  the Native format.
   ///Otherwise, it assumes it is loading from a GDAL file.
-  bool from_cache;
+  bool from_cache = false;
+
+  #ifdef RICHDEM_USE_BOOST_SERIALIZATION
+    friend class boost::serialization::access;
+    // When the class Archive corresponds to an output archive, the
+    // & operator is defined similar to <<.  Likewise, when the class Archive
+    // is a type of input archive the & operator is defined similar to >>.
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version){
+      ar & filename;
+      ar & basename;
+      ar & geotransform;
+      ar & projection;
+      ar & metadata;
+      ar & _nshift;
+      ar & _data;
+      ar & no_data;
+      ar & num_data_cells;
+      ar & view_width;
+      ar & view_height;
+      ar & view_xoff;
+      ar & view_yoff;
+      ar & from_cache;
+    };
+  #endif
 
   #ifdef USEGDAL
   ///TODO
