@@ -94,14 +94,14 @@ int main(int argc, char** argv) {
       // Save DH
       std::ifstream ifs(save_dh_filename);
       boost::archive::binary_iarchive ia(ifs);
-      ia >> deps >> flowdirs;
+      ia >> deps >> flowdirs >> label;
       std::cout << "m Loading DH from " << save_dh_filename << std::endl;
     } else {
       // Load DH
       deps = dh::GetDepressionHierarchy<double, rd::Topology::D8>(topo, label, flowdirs);
       std::ofstream ofs(save_dh_filename);
       boost::archive::binary_oarchive oa(ofs);
-      oa << deps << flowdirs;
+      oa << deps << flowdirs << label;
       std::cout << "m Saving DH to " << save_dh_filename << std::endl;
     }
   } else {
