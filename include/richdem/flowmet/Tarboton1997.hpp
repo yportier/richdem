@@ -1,5 +1,4 @@
-#ifndef _flowdirs_Tarboton1997_hpp_
-#define _flowdirs_Tarboton1997_hpp_
+#pragma once
 
 #include <richdem/common/constants.hpp>
 #include <richdem/common/logger.hpp>
@@ -43,8 +42,8 @@ void FM_Tarboton(
   //are renumbered as follows:
   //    3->1    2->2    1->3    0->4    7->5    6->6    5->7    4->8
   //This gives the following table
-  //  Remapped Facet #  =  -   1    2     3    4    5   6    7    8  
-  //  Tarboton Facet #  =  -   3    2     1    0    7   6    5    4  
+  //  Remapped Facet #  =  -   1    2     3    4    5   6    7    8
+  //  Tarboton Facet #  =  -   3    2     1    0    7   6    5    4
   const int    dy_e1[9] = {0,  0 , -1 ,  -1 ,  0 ,  0 , 1 ,  1 ,  0  };
   const int    dx_e1[9] = {0, -1 ,  0 ,   0 ,  1 ,  1 , 0 ,  0 , -1  };
   const int    dy_e2[9] = {0, -1 , -1 ,  -1 , -1 ,  1 , 1 ,  1 ,  1  };
@@ -137,7 +136,7 @@ void FM_Tarboton(
       props(x,y,nwrap(nmax+1)) = 1;
     } else {
       props(x,y,nmax)          = rmax/(M_PI/4.);
-      props(x,y,nwrap(nmax+1)) = 1-rmax/(M_PI/4.);      
+      props(x,y,nwrap(nmax+1)) = 1-rmax/(M_PI/4.);
     }
   }
   progress.stop();
@@ -149,5 +148,3 @@ void FM_Dinfinity(const Array2D<E> &elevations, Array3D<float> &props){
 }
 
 }
-
-#endif

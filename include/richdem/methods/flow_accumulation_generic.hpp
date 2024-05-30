@@ -1,9 +1,9 @@
-#ifndef _flow_accumulatin_generic_
-#define _flow_accumulatin_generic_
+#pragma once
 
 #include <richdem/common/Array2D.hpp>
 #include <richdem/common/logger.hpp>
 #include <richdem/common/ProgressBar.hpp>
+
 #include <queue>
 
 namespace richdem {
@@ -14,7 +14,7 @@ namespace richdem {
   @author Richard Barnes (rbarnes@umn.edu)
 
   Given a flow metric function \p func, this calculations the flow accumulation.
-   
+
   @param[in]     func         The flow metric to use
   @param[in]     &elevations  An elevation field
   @param[in,out] &accum       Accumulation matrix: must be already initialized
@@ -100,5 +100,3 @@ void FlowAccumulation(const Array3D<float> &props, Array2D<A> &accum){
 }
 
 }
-
-#endif

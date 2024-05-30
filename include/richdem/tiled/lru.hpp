@@ -4,8 +4,7 @@
 
   Richard Barnes (rbarnes@umn.edu), 2016
 */
-#ifndef _lru_hpp_
-#define _lru_hpp_
+#pragma once
 
 #include <list>
 #include <unordered_map>
@@ -86,7 +85,7 @@ class LRU {
   }
 
   ///@brief Evict the least-recently used item out of the LRU cache.
-  void pop_back() {    
+  void pop_back() {
     visited.erase(cache.back());
     cache.pop_back();
     len--;
@@ -102,5 +101,3 @@ class LRU {
 };
 
 }
-
-#endif

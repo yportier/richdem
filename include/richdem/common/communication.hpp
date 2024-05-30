@@ -5,8 +5,7 @@
   Richard Barnes (rbarnes@umn.edu), 2015
 */
 //TODO: Should include parameter definitions for all of these.
-#ifndef _communication_hpp_
-#define _communication_hpp_
+#pragma once
 
 #include <mpi.h>
 #include <cereal/types/string.hpp>
@@ -188,5 +187,3 @@ void CommBytesReset(){
   bytes_recv = 0;
   bytes_sent = 0;
 }
-
-#endif

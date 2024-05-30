@@ -1,6 +1,4 @@
 #pragma once
-#ifndef HEADER_RADIX_HEAP
-#define HEADER_RADIX_HEAP
 
 #include <algorithm>
 #include <array>
@@ -390,5 +388,3 @@ class pair_radix_heap {
   }
 };
 }  // namespace radix_heap
-
-#endif // HEADER_RADIX_HEAP

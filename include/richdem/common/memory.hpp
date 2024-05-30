@@ -4,8 +4,7 @@
 
   Richard Barnes (rbarnes@umn.edu), 2015
 */
-#ifndef _memory_hpp_
-#define _memory_hpp_
+#pragma once
 
 #include <fstream>
 #include <string>
@@ -28,7 +27,7 @@ void ProcessMemUsage(long &vmpeak, long &vmhwm){
     std::ifstream fin("/proc/self/status");
     if(!fin.good())
       return;
-    
+
     while (!vmpeak || !vmhwm){
       std::string line;
 
@@ -54,5 +53,3 @@ void ProcessMemUsage(long &vmpeak, long &vmhwm){
 }
 
 }
-
-#endif

@@ -4,9 +4,6 @@ The source code is obtained from the website at http://mrl.nyu.edu/~perlin/doc/o
 In this project,we use the Perlin Noise to generating synthetic DEMs to check the correctness of our proposed variant.
 */
 
-#ifndef PERLIN_H_DEF
-#define PERLIN_H_DEF
+#pragma once
 
 float noise2(float vec[2]);
-
-#endif //PERLIN_H_DEF

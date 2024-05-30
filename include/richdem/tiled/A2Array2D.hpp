@@ -3,8 +3,7 @@
   @brief Experimental tile manager for large datasets (TODO)
   @author Richard Barnes
 */
-#ifndef _a2array2d_hpp_
-#define _a2array2d_hpp_
+#pragma once
 
 #include <richdem/common/logger.hpp>
 #include <richdem/common/Layoutfile.hpp>
@@ -612,5 +611,3 @@ class A2Array2D {
 };
 
 }
-
-#endif

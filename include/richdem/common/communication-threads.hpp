@@ -1,5 +1,4 @@
-#ifndef _communication_hpp_
-#define _communication_hpp_
+#pragma once
 
 #error This test module is not yet ready for compilation.
 
@@ -269,5 +268,3 @@ void CommBarrier(){
     while(tcount<CommSize()-1){} //Busy loop until all threads present
   #endif
 }
-
-#endif
