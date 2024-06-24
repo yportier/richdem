@@ -11,7 +11,7 @@ except ImportError as e:
     print("COULD NOT LOAD RichDEM ENGINE! NOTHING WILL WORK!")
     raise e
 
-from _richdem import depression_hierarchy
+from _richdem import depression_hierarchy, convert_arc_flowdirs_to_richdem_d8, flow_accumulation_from_d8
 
 try:
     import rasterio as rio
@@ -972,20 +972,22 @@ def fill_spill_merge(dem: rdarray, labels: rdarray, flowdirs: rdarray, deps: Lis
 
 
 __all__ = (
-    "GDAL_AVAILABLE",
-    "STANDARD_GEOTRANSFORM",
-    "rdShow",
-    "LoadGDAL",
-    "SaveGDAL",
-    "FillDepressions",
     "BreachDepressions",
-    "ResolveFlats",
-    "FlowAccumulation",
+    "convert_arc_flowdirs_to_richdem_d8",
+    "fill_spill_merge"
+    "FillDepressions",
+    "flow_accumulation_from_d8",
     "FlowAccumFromProps",
+    "FlowAccumulation",
     "FlowProportions",
-    "TerrainAttribute",
+    "GDAL_AVAILABLE",
     "generate_perlin_terrain",
     "get_depression_hierarchy",
     "get_new_depression_hierarchy_labels",
-    "fill_spill_merge"
+    "LoadGDAL",
+    "rdShow",
+    "ResolveFlats",
+    "SaveGDAL",
+    "STANDARD_GEOTRANSFORM",
+    "TerrainAttribute",
 )

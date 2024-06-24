@@ -458,3 +458,51 @@ TEST_CASE("DirectionsMatchExpectations"){
     CHECK(get_nmax_for_topology<Topology::D4>() == 4);
   }
 }
+
+TEST_CASE("flow_accumulation_from_d8"){
+  SUBCASE("All left"){
+    const Array2D<int> d8s = {
+        {1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1},
+    };
+
+    Array2D<uint32_t> expected = {
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 5, 4, 3, 2, 1, 0},
+        {0, 5, 4, 3, 2, 1, 0},
+        {0, 5, 4, 3, 2, 1, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+    };
+    expected.setNoData(ACCUM_NO_DATA);
+
+    const auto ret = flow_accumulation_from_d8(d8s);
+
+    CHECK(ret==expected);
+  }
+
+  SUBCASE("Snake"){
+    const Array2D<int> d8s = {
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 7, 1, 7, 1, 7, 0},
+        {0, 7, 3, 7, 3, 7, 0},
+        {0, 1, 3, 1, 3, 1, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+    };
+
+    Array2D<uint32_t> expected = {
+        {0,  0,  0, 0, 0, 0, 0},
+        {0, 13, 12, 7, 6, 1, 0},
+        {0, 14, 11, 8, 5, 2, 0},
+        {0, 15, 10, 9, 4, 3, 0},
+        {0,  0,  0, 0, 0, 0, 0},
+    };
+    expected.setNoData(ACCUM_NO_DATA);
+
+    const auto ret = flow_accumulation_from_d8(d8s);
+
+    CHECK(ret==expected);
+  }
+}

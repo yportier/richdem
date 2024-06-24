@@ -577,6 +577,8 @@ class Array2D {
     @param[out] y   Y-coordinate of i
   */
   std::pair<xy_t, xy_t> iToxy(const i_t i) const {
+    assert(0<=i);
+    assert(i<view_width * view_height);
     return {i%view_width, i/view_width};
   }
 

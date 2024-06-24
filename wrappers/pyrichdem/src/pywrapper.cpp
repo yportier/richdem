@@ -1,5 +1,7 @@
 #include "pywrapper.hpp"
 
+#include <richdem/misc/conversion.hpp>
+#include <richdem/methods/flow_accumulation.hpp>
 #include <richdem/depressions/depression_hierarchy.hpp>
 #include <richdem/depressions/fill_spill_merge.hpp>
 
@@ -48,6 +50,8 @@ PYBIND11_MODULE(_richdem, m) {
   m.def("rdCompileTime", &rdCompileTime, "Commit time of previous commit");
 
   m.def("FlowAccumulation", &FlowAccumulation<double>, "TODO");
+  m.def("flow_accumulation_from_d8", &flow_accumulation_from_d8<double>, "TODO");
+  m.def("convert_arc_flowdirs_to_richdem_d8", &convert_arc_flowdirs_to_richdem_d8, "Convert ArcGIS Flowdirs to Richdem D8 flowdirs");
 
   py::class_<Array3D<float>>(m, "Array3D_float", py::buffer_protocol(), py::dynamic_attr())
       .def(py::init<>())
