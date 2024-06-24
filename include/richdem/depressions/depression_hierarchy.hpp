@@ -10,6 +10,10 @@
 #include <richdem/common/radix_heap.hpp>
 #include <richdem/common/timer.hpp>
 
+#if RICHDEM_USE_BOOST_SERIALIZATION
+  #include <boost/serialization/vector.hpp>
+#endif
+
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -87,9 +91,34 @@ struct Depression {
   // Water currently contained within the depression. Used in the Water Level
   // Equation (see below).
   double water_vol = 0;
-
   // Total elevation of cells contained with the depression and its children
   double total_elevation = 0;
+
+#if RICHDEM_USE_BOOST_SERIALIZATION
+    friend class boost::serialization::access;
+    // When the class Archive corresponds to an output archive, the
+    // & operator is defined similar to <<.  Likewise, when the class Archive
+    // is a type of input archive the & operator is defined similar to >>.
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version){
+        ar & pit_cell;
+        ar & out_cell;
+        ar & parent;
+        ar & odep;
+        ar & geolink;
+        ar & pit_elev;
+        ar & out_elev;
+        ar & lchild;
+        ar & rchild;
+        ar & ocean_parent;
+        ar & ocean_linked;
+        ar & dep_label;
+        ar & cell_count;
+        ar & dep_vol;
+        ar & water_vol;
+        ar & total_elevation;
+    };
+ #endif
 };
 
 // A key part of the algorithm is keeping track of the outlets which connect
